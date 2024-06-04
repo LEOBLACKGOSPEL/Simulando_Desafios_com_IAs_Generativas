@@ -1,57 +1,33 @@
 import re
 
-
-def analyze_sentiment(comentario):
-  """
-  Analisa o sentimento de um comentário de usuário, ignorando caracteres especiais.
-
-  Retorna:
-    Uma string indicando o sentimento do comentário ("Positivo", "Negativo", "Neutro") ou uma mensagem de erro.
-  """
-
-  try:
-
-    # Verifica se o comentário está vazio
-    if not comentario:
-      raise ValueError("Comentário vazio!")
-
-    # Remoção de caracteres especiais
-    comentario_sem_especiais = re.sub(r'[^\w\s]', '', comentario).lower()
+def analyze_sentiment():
+    # Entrada do usuário
+    comentario = input()
 
     # Divisão do comentário em palavras
-    palavras = comentario_sem_especiais.split()
-
-    # Listas de palavras
+    palavras = re.findall(r'\b\w+\b', comentario.lower())
+    
+    # Lista de palavras positivas, negativas e neutras
     positivas = ["bom", "boa", "ótimo", "excelente", "maravilhoso", "gostei", "incrível"]
     negativas = ["ruim", "péssimo", "horrível", "terrível", "odeio"]
     neutras = ["mas", "deixou", "apesar", "embora"]
 
-    # Contagem de palavras
+    # Contagem de palavras positivas, negativas e neutras
     count_positivo = sum(palavra in positivas for palavra in palavras)
     count_negativo = sum(palavra in negativas for palavra in palavras)
     count_neutro = sum(palavra in neutras for palavra in palavras)
 
-    # Classificação do sentimento
+    # Verifica se há mais palavras positivas do que negativas no comentário e se não há palavras neutras. Se essa condição for verdadeira, o comentário é considerado positivo.
     if count_positivo > count_negativo and count_neutro == 0:
-      sentimento = "Positivo"
+        return "Positivo"
+    # Verifica se há mais palavras negativas do que positivas no comentário e se não há palavras neutras. Se essa condição for verdadeira, o comentário é considerado negativo.
     elif count_negativo > count_positivo and count_neutro == 0:
-      sentimento = "Negativo"
+        return "Negativo"
+    # Caso contrário, o sentimento é neutro.
     else:
-      sentimento = "Neutro"
+        return "Neutro"
 
-    # Retorna o sentimento e as contagens de palavras
-    return f"Sentimento: {sentimento}"
-
-  except ValueError as e:
-    # Mensagem de erro para entrada inválida
-    return f"Erro: {e}"
-
-# Executa a função e imprime o resultado
-resultado1 = analyze_sentiment("A mentoria foi incrível, aprendi muito!")
-resultado2 = analyze_sentiment("O clima hoje está terrível, odeio dias quentes.")
-resultado3 = analyze_sentiment("A comida estava boa, mas o serviço deixou a desejar.")
-
-print(resultado1)
-print(resultado2)
-print(resultado3)
-
+# Solicita o comentário do usuário
+print("Insira um comentário:")
+sentimento = analyze_sentiment()
+print("Sentimento:", sentimento)
